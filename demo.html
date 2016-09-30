@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Catalog Generator</title>
+    <style type="text/css">
+    ::-webkit-scrollbar {width: 6px;height:6px;}
+    ::-webkit-scrollbar-track-piece{background-color: #eee;margin: -2px;}
+    ::-webkit-scrollbar-thumb{background: #aaa;min-height: 150px;min-width: 150px;border-radius: 10px;}
+    ::-webkit-scrollbar-thumb:vertical:hover{background: #555555}
+    ::-webkit-scrollbar-thumb:horizontal:hover{background: #555555}
+        * {
+            padding:  0;
+            margin:  0;
+            border:  0;
+        }
+        a {
+            text-decoration: none;
+            color: #666;
+        }
+        ul, li {
+            list-style: none;
+            line-height: 30px;
+        }
+        body {
+            width:  100%;
+        }
+        #blogContent {
+            width: 800px;
+            margin:  20px auto;
+        }
+        .catalog-menu {
+            position:  fixed;
+            top: 0;
+            right: 50px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .catalog-menu li {
+            font-size: 18px;
+        }
+        .catalog-menu li a {
+            display: block;
+            padding-left: 10px;
+            transition: background .2s;
+        }
+        .catalog-menu li.active {
+            color: #27ad27;
+            background: #eee;
+            border-left: 3px solid #27a727;
+        }
+        .catalog-menu li li {
+            font-size: 14px;
+            margin-left: 20px;
+        }
+        .catalog-menu li li li {
+            font-size: 12px;
+            margin-left: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="catalogGenerator.css">
+</head>
+<body>
+
+<div id="blogContent">
+    <p>
+        <strong>缘由：</strong> 初次接触命令行操作MySQL数据库，使用还不熟练，故整理之，方便日后查阅。
+    </p>
+    <p>
+        <strong>备注： 用户登录MySQL后，对数据库操作的命令基本都以";" 或 "\g"结尾。</strong>
+    </p>
+    <span id="OSC_h2_1"></span>
+    <h2 id="一-mysql服务操作：">一. MySQL服务操作：</h2>
+    <span id="OSC_h3_2"></span>
+    <h3 id="启动mysql服务：">启动MySQL服务：</h3>
+    <pre class="hljs nginx">
+        <code class="hljs nginx"><span class="hljs-attribute"><span class="hljs-attribute">net</span></span> start mysql
+        </code>
+    </pre>
+    <span id="OSC_h3_3"></span>
+    <h3 id="停止mysql服务：">停止MySQL服务：</h3>
+    <pre class="hljs r">
+        <code class="hljs r">net <span class="hljs-keyword"><span class="hljs-keyword">stop</span></span> mysql
+        </code>
+    </pre>
+    <span id="OSC_h3_4"></span>
+    <h3 id="进入mysql数据库：">进入MySQL数据库：</h3>
+    <pre class="hljs nginx">
+        <code class="hljs nginx"><span class="hljs-attribute"><span class="hljs-attribute">mysql</span></span> -h 主机地址 -u用户名 -p用户密码
+        </code>
+    </pre>
+    <span id="OSC_h3_5"></span>
+    <h3 id="退出mysql操作：">退出MySQL操作：</h3>
+    <pre class="hljs">
+        <code class="hljs">quit;
+        </code>
+    </pre>
+    <span id="OSC_h3_6"></span>
+    <h3 id="刷新数据库：">刷新数据库：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">flush</span></span><span class="hljs-keyword"><span class="hljs-keyword">privileges</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_7"></span>
+    <h3 id="创建数据库用户：">创建数据库用户：</h3>
+    <p>
+        一次可以创建多个数据库用户，如：
+    </p>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">CREATE</span></span><span class="hljs-keyword"><span class="hljs-keyword">USER</span></span> 用户<span class="hljs-number"><span class="hljs-number">1</span></span><span class="hljs-keyword"><span class="hljs-keyword">identified</span></span><span class="hljs-keyword"><span class="hljs-keyword">BY</span></span><span class="hljs-string"><span class="hljs-string">"密码1"</span></span> , 用户<span class="hljs-number"><span class="hljs-number">2</span></span><span class="hljs-keyword"><span class="hljs-keyword">IDENTIFIED</span></span><span class="hljs-keyword"><span class="hljs-keyword">BY</span></span><span class="hljs-string"><span class="hljs-string">"密码2"</span></span>;
+或者：
+        <span class="hljs-keyword"><span class="hljs-keyword">grant</span></span><span class="hljs-keyword"><span class="hljs-keyword">select</span></span><span class="hljs-keyword"><span class="hljs-keyword">on</span></span> 数据库.* <span class="hljs-keyword"><span class="hljs-keyword">to</span></span> 用户名@登录主机 <span class="hljs-keyword"><span class="hljs-keyword">identified</span></span><span class="hljs-keyword"><span class="hljs-keyword">by</span></span><span class="hljs-string"><span class="hljs-string">"密码"</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_8"></span>
+    <h3 id="更改mysql用户密码：">更改MySQL用户密码：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql">mysqladmin -u用户名 -p旧密码 password 新密码
+或者：
+        <span class="hljs-keyword"><span class="hljs-keyword">update</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span><span class="hljs-keyword"><span class="hljs-keyword">set</span></span><span class="hljs-keyword"><span class="hljs-keyword">password</span></span>=<span class="hljs-keyword"><span class="hljs-keyword">password</span></span>(<span class="hljs-string"><span class="hljs-string">"新密码"</span></span>) <span class="hljs-keyword"><span class="hljs-keyword">where</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span>=<span class="hljs-string"><span class="hljs-string">"用户名"</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_9"></span>
+    <h3 id="用户的权限控制：">用户的权限控制：</h3>
+    <p>
+        库，表级的权限控制 : 将某个库中的某个表的控制权赋予某个用户：
+    </p>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">Grant</span></span> all <span class="hljs-keyword"><span class="hljs-keyword">ON</span></span> db_name.table_name <span class="hljs-keyword"><span class="hljs-keyword">TO</span></span> user_name [ indentified <span class="hljs-keyword"><span class="hljs-keyword">by</span></span><span class="hljs-string"><span class="hljs-string">"password"</span></span> ];
+        </code>
+    </pre>
+    <span id="OSC_h3_10"></span>
+    <h3 id="设置用户登录ip限制：">设置用户登录IP限制：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">grant</span></span> all <span class="hljs-keyword"><span class="hljs-keyword">privileges</span></span><span class="hljs-keyword"><span class="hljs-keyword">on</span></span> 数据库.* <span class="hljs-keyword"><span class="hljs-keyword">to</span></span> 用户名@主机地址 <span class="hljs-keyword"><span class="hljs-keyword">identified</span></span><span class="hljs-keyword"><span class="hljs-keyword">by</span></span><span class="hljs-string"><span class="hljs-string">"密码"</span></span><span class="hljs-keyword"><span class="hljs-keyword">with</span></span><span class="hljs-keyword"><span class="hljs-keyword">grant</span></span><span class="hljs-keyword"><span class="hljs-keyword">option</span></span>;
+        </code>
+    </pre>
+    <p>
+        例如：
+    </p>
+    <pre class="hljs sql">
+        <code class="hljs sql">// 设置root用户可在本地访问所有的数据库：
+        <span class="hljs-keyword"><span class="hljs-keyword">grant</span></span> all <span class="hljs-keyword"><span class="hljs-keyword">privileges</span></span><span class="hljs-keyword"><span class="hljs-keyword">on</span></span> *.* <span class="hljs-keyword"><span class="hljs-keyword">to</span></span> root@localhost <span class="hljs-keyword"><span class="hljs-keyword">identified</span></span><span class="hljs-keyword"><span class="hljs-keyword">by</span></span><span class="hljs-string"><span class="hljs-string">"1234567890"</span></span><span class="hljs-keyword"><span class="hljs-keyword">with</span></span><span class="hljs-keyword"><span class="hljs-keyword">grant</span></span><span class="hljs-keyword"><span class="hljs-keyword">option</span></span>;
+// 设置root用户可在任何IP地址访问mydatabase数据库：
+        <span class="hljs-keyword"><span class="hljs-keyword">grant</span></span> all <span class="hljs-keyword"><span class="hljs-keyword">privileges</span></span><span class="hljs-keyword"><span class="hljs-keyword">on</span></span> mydatabase.* <span class="hljs-keyword"><span class="hljs-keyword">to</span></span> root@<span class="hljs-string"><span class="hljs-string">"%"</span></span><span class="hljs-keyword"><span class="hljs-keyword">identified</span></span><span class="hljs-keyword"><span class="hljs-keyword">by</span></span><span class="hljs-string"><span class="hljs-string">"1234567890"</span></span><span class="hljs-keyword"><span class="hljs-keyword">with</span></span><span class="hljs-keyword"><span class="hljs-keyword">grant</span></span><span class="hljs-keyword"><span class="hljs-keyword">option</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_11"></span>
+    <h3 id="删除用户登录ip授权：">删除用户登录IP授权：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">revoke</span></span> all <span class="hljs-keyword"><span class="hljs-keyword">privileges</span></span><span class="hljs-keyword"><span class="hljs-keyword">on</span></span> 数据库.* <span class="hljs-keyword"><span class="hljs-keyword">from</span></span> 用户名@<span class="hljs-string"><span class="hljs-string">"%"</span></span>;
+或者：
+        <span class="hljs-keyword"><span class="hljs-keyword">delete</span></span><span class="hljs-keyword"><span class="hljs-keyword">from</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span><span class="hljs-keyword"><span class="hljs-keyword">where</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span>=<span class="hljs-string"><span class="hljs-string">"root"</span></span><span class="hljs-keyword"><span class="hljs-keyword">and</span></span> host=<span class="hljs-string"><span class="hljs-string">"%"</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_12"></span>
+    <h3 id="删除sql用户：">删除SQL用户：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">delete</span></span><span class="hljs-keyword"><span class="hljs-keyword">from</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span><span class="hljs-keyword"><span class="hljs-keyword">where</span></span><span class="hljs-keyword"><span class="hljs-keyword">User</span></span>=<span class="hljs-string"><span class="hljs-string">"用户名"</span></span><span class="hljs-keyword"><span class="hljs-keyword">and</span></span> Host=<span class="hljs-string"><span class="hljs-string">"主机地址"</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h2_13"></span>
+    <h2 id="二-数据库操作：">二. 数据库操作：</h2>
+    <span id="OSC_h3_14"></span>
+    <h3 id="列出数据库：">列出数据库：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">show</span></span><span class="hljs-keyword"><span class="hljs-keyword">databases</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_15"></span>
+    <h3 id="使用名为database-name的数据库：">使用名为database_name的数据库：</h3>
+    <pre class="hljs php">
+        <code class="hljs php"><span class="hljs-keyword"><span class="hljs-keyword">use</span></span><span class="hljs-title"><span class="hljs-title">database_name</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_16"></span>
+    <h3 id="创建名为database-name的数据库：">创建名为database_name的数据库：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">create</span></span><span class="hljs-keyword"><span class="hljs-keyword">database</span></span> database_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_17"></span>
+    <h3 id="删除一个名为database-name的数据库：">删除一个名为database_name的数据库：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">drop</span></span><span class="hljs-keyword"><span class="hljs-keyword">database</span></span> database_name;
+        </code>
+    </pre>
+    <span id="OSC_h2_18"></span>
+    <h2 id="三-表操作：">三. 表操作：</h2>
+    <span id="OSC_h3_19"></span>
+    <h3 id="列出所有表：">列出所有表：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">show</span></span><span class="hljs-keyword"><span class="hljs-keyword">tables</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_20"></span>
+    <h3 id="创建一个名为table-name的新表：">创建一个名为table_name的新表：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">create</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name;
+或者：
+        <span class="hljs-keyword"><span class="hljs-keyword">create</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name (字段<span class="hljs-number"><span class="hljs-number">1</span></span> 数据类型 , 字段<span class="hljs-number"><span class="hljs-number">2</span></span> 数据类型);
+        </code>
+    </pre>
+    <span id="OSC_h3_21"></span>
+    <h3 id="删除表table-name：">删除表table_name：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">drop</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_22"></span>
+    <h3 id="显示表table-name的数据结构：">显示表table_name的数据结构：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">describe</span></span> table_name;
+或：
+        <span class="hljs-keyword"><span class="hljs-keyword">show</span></span><span class="hljs-keyword"><span class="hljs-keyword">columns</span></span><span class="hljs-keyword"><span class="hljs-keyword">from</span></span> table_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_23"></span>
+    <h3 id="向表table-name中添加数据：">向表table_name中添加数据：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">Insert</span></span><span class="hljs-keyword"><span class="hljs-keyword">into</span></span> table_name [(字段<span class="hljs-number"><span class="hljs-number">1</span></span> , 字段<span class="hljs-number"><span class="hljs-number">2</span></span> , ….)] <span class="hljs-keyword"><span class="hljs-keyword">values</span></span> (值<span class="hljs-number"><span class="hljs-number">1</span></span> , 值<span class="hljs-number"><span class="hljs-number">2</span></span> , …..);
+        </code>
+    </pre>
+    <span id="OSC_h3_24"></span>
+    <h3 id="更新某一个字段的数据：">更新某一个字段的数据：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">Update</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">set</span></span> 字段名=<span class="hljs-string"><span class="hljs-string">"新值"</span></span> [, 字段<span class="hljs-number"><span class="hljs-number">2</span></span> =<span class="hljs-string"><span class="hljs-string">"新值"</span></span> , …..][<span class="hljs-keyword"><span class="hljs-keyword">where</span></span><span class="hljs-keyword"><span class="hljs-keyword">id</span></span>=id_num] [<span class="hljs-keyword"><span class="hljs-keyword">order</span></span><span class="hljs-keyword"><span class="hljs-keyword">by</span></span> 字段 顺序];
+        </code>
+    </pre>
+    <p>
+        例 : <code>update mytable set username="lisi" where id=1;</code>。
+    </p>
+    <span id="OSC_h3_25"></span>
+    <h3 id="将表table-name中的记录清空：">将表table_name中的记录清空：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">delete</span></span><span class="hljs-keyword"><span class="hljs-keyword">from</span></span> table_name; // 删除整个表中的信息
+        <span class="hljs-keyword"><span class="hljs-keyword">delete</span></span><span class="hljs-keyword"><span class="hljs-keyword">from</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">where</span></span> 条件语句 ; // 删除表中指定条件的语句
+        </code>
+    </pre>
+    <span id="OSC_h3_26"></span>
+    <h3 id="显示表table-name的记录：">显示表table_name的记录：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">select</span></span> * <span class="hljs-keyword"><span class="hljs-keyword">from</span></span> table_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_27"></span>
+    <h3 id="修改表名：">修改表名：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">rename</span></span><span class="hljs-keyword"><span class="hljs-keyword">to</span></span> new_table_name;
+        </code>
+    </pre>
+    <span id="OSC_h2_28"></span>
+    <h2 id="四-修改表结构：">四. 修改表结构：</h2>
+    <span id="OSC_h3_29"></span>
+    <h3 id="把某个字段设为主键：">把某个字段设为主键：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">add</span></span> primary <span class="hljs-keyword"><span class="hljs-keyword">key</span></span> (col_name);
+        </code>
+    </pre>
+    <span id="OSC_h3_30"></span>
+    <h3 id="删除主键的定义：">删除主键的定义：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">drop</span></span> primary <span class="hljs-keyword"><span class="hljs-keyword">key</span></span> (col_name);
+        </code>
+    </pre>
+    <span id="OSC_h3_31"></span>
+    <h3 id="增加字段，并设置字段类型：">增加字段，并设置字段类型：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">add</span></span> col_name <span class="hljs-built_in"><span class="hljs-built_in">varchar</span></span>(<span class="hljs-number"><span class="hljs-number">20</span></span>);
+        </code>
+    </pre>
+    <span id="OSC_h3_32"></span>
+    <h3 id="删除字段：">删除字段：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">drop</span></span> col_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_33"></span>
+    <h3 id="修改字段属性：">修改字段属性：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">modify</span></span> col_name <span class="hljs-built_in"><span class="hljs-built_in">varchar</span></span>(<span class="hljs-number"><span class="hljs-number">40</span></span>) <span class="hljs-keyword"><span class="hljs-keyword">not</span></span><span class="hljs-literal"><span class="hljs-literal">null</span></span>;
+        </code>
+    </pre>
+    <span id="OSC_h3_34"></span>
+    <h3 id="修改字段名：">修改字段名：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">alter</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> table_name <span class="hljs-keyword"><span class="hljs-keyword">change</span></span> old_col_name new_col_name <span class="hljs-built_in"><span class="hljs-built_in">varchar</span></span>(<span class="hljs-number"><span class="hljs-number">40</span></span>); // 必须为当前字段指定数据类型等属性，否则不能修改
+        </code>
+    </pre>
+    <span id="OSC_h3_35"></span>
+    <h3 id="用已存在的表来建新表，但不包含旧表的数据：">用已存在的表来建新表，但不包含旧表的数据：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">create</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> new_table_name <span class="hljs-keyword"><span class="hljs-keyword">like</span></span> old_table_name;
+        </code>
+    </pre>
+    <span id="OSC_h3_36"></span>
+    <h3 id="增加主键，外键，约束，索引等：">增加主键，外键，约束，索引等：</h3>
+    <blockquote>
+        <ul>
+            <li>约束（主键： <strong>Primary key</strong>、唯一性： <strong>Unique</strong>、非空： <strong>Not Null</strong>）；</li>
+            <li>自动增张： <strong>auto_increment</strong>；</li>
+            <li>外键： <strong>Foreign key</strong>。 与reference table_name(col_name列名)配合使用，建表时单独使用。</li>
+            <li>删除多个表中有关联的数据：设置<strong>foreign key</strong> 为<strong>set null</strong>。 </li>
+        </ul>
+    </blockquote>
+    <span id="OSC_h2_37"></span>
+    <h2 id="五-数据的备份与恢复：">五. 数据的备份与恢复：</h2>
+    <span id="OSC_h3_38"></span>
+    <h3 id="在当前的数据库上执行外部的sql脚本：">在当前的数据库上执行外部的SQL脚本：</h3>
+    <pre class="hljs css">
+        <code class="hljs css"><span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql</span></span> &lt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">extend</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.sql</span></span>
+        </code>
+    </pre>
+    <span id="OSC_h3_39"></span>
+    <h3 id="指定数据库执行外部sql脚本：">指定数据库执行外部SQL脚本：</h3>
+    <pre class="hljs css">
+        <code class="hljs css"><span class="hljs-selector-tag"><span class="hljs-selector-tag">mysql</span></span><span class="hljs-selector-attr"><span class="hljs-selector-attr">[表名]</span></span> &lt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">extend</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.sql</span></span>
+        </code>
+    </pre>
+    <span id="OSC_h3_40"></span>
+    <h3 id="数据传入：">数据传入：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">load</span></span><span class="hljs-keyword"><span class="hljs-keyword">data</span></span><span class="hljs-keyword"><span class="hljs-keyword">local</span></span><span class="hljs-keyword"><span class="hljs-keyword">infile</span></span><span class="hljs-string"><span class="hljs-string">"[文件名]"</span></span><span class="hljs-keyword"><span class="hljs-keyword">into</span></span><span class="hljs-keyword"><span class="hljs-keyword">table</span></span> [表名];
+        </code>
+    </pre>
+    <span id="OSC_h3_41"></span>
+    <h3 id="备份数据库：">备份数据库：</h3>
+    <pre class="hljs css">
+        <code class="hljs css"><span class="hljs-selector-tag"><span class="hljs-selector-tag">mysqldump</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">-h</span></span> 主机地址 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-u</span></span> 用户名 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-p</span></span> 数据库名 &gt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">dbname_backup</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.sql</span></span>
+        </code>
+    </pre>
+    <span id="OSC_h3_42"></span>
+    <h3 id="恢复数据库：">恢复数据库：</h3>
+    <pre class="hljs css">
+        <code class="hljs css"><span class="hljs-selector-tag"><span class="hljs-selector-tag">mysqladmin</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">-h</span></span> 主机地址 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-u</span></span> 用户名 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-p</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">create</span></span> 新数据库名
+        <span class="hljs-selector-tag"><span class="hljs-selector-tag">mysqldump</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">-h</span></span> 主机地址 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-u</span></span> 用户名 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-p</span></span> 新数据库名 &lt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">dbname_backup</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.sql</span></span>
+        </code>
+    </pre>
+    <span id="OSC_h3_43"></span>
+    <h3 id="卸出建表指令：">卸出建表指令：</h3>
+    <pre class="hljs bash">
+        <code class="hljs bash">mysqladmin -u 用户名 -p <span class="hljs-_"><span class="hljs-_">-d</span></span> 数据库名 &gt; a.sql
+        </code>
+    </pre>
+    <span id="OSC_h3_44"></span>
+    <h3 id="卸出插入数据的sql命令，不包含建表命令：">卸出插入数据的sql命令，不包含建表命令：</h3>
+    <pre class="hljs css">
+        <code class="hljs css"><span class="hljs-selector-tag"><span class="hljs-selector-tag">mysqladmin</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">-u</span></span> 用户名 <span class="hljs-selector-tag"><span class="hljs-selector-tag">-p</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">-t</span></span> 数据库名 &gt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">a</span></span><span class="hljs-selector-class"><span class="hljs-selector-class">.sql</span></span>
+        </code>
+    </pre>
+    <span id="OSC_h3_45"></span>
+    <h3 id="卸出数据，不包含sql命令：">卸出数据，不包含sql命令：</h3>
+    <pre class="hljs r">
+        <code class="hljs r">mysqldump -<span class="hljs-literal"><span class="hljs-literal">T</span></span> 卸出数据的目录 phptest 指定卸出的数据表
+        </code>
+    </pre>
+    <p>
+        其中，只有指定了 <strong>-T</strong> 参数才可以卸出纯文本文件。如果不指定卸出的数据表，则将卸出整个数据库的数据。每个表会生成两个文件，一个为.sql文件，包含建表执行；另一个为.txt文件，只包含数据，且没有sql指令。
+    </p>
+    <span id="OSC_h2_46"></span>
+    <h2 id="六-查看数据库信息：">六. 查看数据库信息：</h2>
+    <span id="OSC_h3_47"></span>
+    <h3 id="查看数据库版本号：">查看数据库版本号：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">select</span></span><span class="hljs-keyword"><span class="hljs-keyword">version</span></span>();
+        </code>
+    </pre>
+    <span id="OSC_h3_48"></span>
+    <h3 id="查看当前的user：">查看当前的user：</h3>
+    <pre class="hljs sql">
+        <code class="hljs sql"><span class="hljs-keyword"><span class="hljs-keyword">select</span></span><span class="hljs-keyword"><span class="hljs-keyword">user</span></span>();
+        </code>
+    </pre>
+    <span id="OSC_h3_49"></span>
+    <h3 id="查看当前操作的数据库名：">查看当前操作的数据库名：</h3>
+    <pre class="hljs less">
+        <code class="hljs less">mysql&gt; <span class="hljs-selector-tag"><span class="hljs-selector-tag">select</span></span><span class="hljs-selector-tag"><span class="hljs-selector-tag">database</span></span>();
+        </code>
+    </pre>
+</div>
+
+<ul class="catalog-menu" id="">
+    <ul>
+        <li class='osc_h2'><a href='#OSC_h2_1'>一. MySQL服务操作：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_2'>启动MySQL服务：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_3'>停止MySQL服务：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_4'>进入MySQL数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_5'>退出MySQL操作：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_6'>刷新数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_7'>创建数据库用户：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_8'>更改MySQL用户密码：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_9'>用户的权限控制：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_10'>设置用户登录IP限制：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_11'>删除用户登录IP授权：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_12'>删除SQL用户：</a></li>
+        </ul>
+        </li>
+        <li class='osc_h2'><a href='#OSC_h2_13'>二. 数据库操作：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_14'>列出数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_15'>使用名为database_name的数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_16'>创建名为database_name的数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_17'>删除一个名为database_name的数据库：</a></li>
+        </ul>
+        </li>
+        <li class='osc_h2'><a href='#OSC_h2_18'>三. 表操作：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_19'>列出所有表：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_20'>创建一个名为table_name的新表：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_21'>删除表table_name：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_22'>显示表table_name的数据结构：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_23'>向表table_name中添加数据：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_24'>更新某一个字段的数据：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_25'>将表table_name中的记录清空：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_26'>显示表table_name的记录：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_27'>修改表名：</a></li>
+        </ul>
+        </li>
+        <li class='osc_h2'><a href='#OSC_h2_28'>四. 修改表结构：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_29'>把某个字段设为主键：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_30'>删除主键的定义：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_31'>增加字段，并设置字段类型：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_32'>删除字段：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_33'>修改字段属性：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_34'>修改字段名：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_35'>用已存在的表来建新表，但不包含旧表的数据：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_36'>增加主键，外键，约束，索引等：</a></li>
+        </ul>
+        </li>
+        <li class='osc_h2'><a href='#OSC_h2_37'>五. 数据的备份与恢复：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_38'>在当前的数据库上执行外部的SQL脚本：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_39'>指定数据库执行外部SQL脚本：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_40'>数据传入：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_41'>备份数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_42'>恢复数据库：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_43'>卸出建表指令：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_44'>卸出插入数据的sql命令，不包含建表命令：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_45'>卸出数据，不包含sql命令：</a></li>
+        </ul>
+        </li>
+        <li class='osc_h2'><a href='#OSC_h2_46'>六. 查看数据库信息：</a></li>
+        <li>
+        <ul>
+            <li class='osc_h3'><a href='#OSC_h3_47'>查看数据库版本号：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_48'>查看当前的user：</a></li>
+            <li class='osc_h3'><a href='#OSC_h3_49'>查看当前操作的数据库名：</a></li>
+        </ul>
+        </li>
+    </ul>
+</ul>
+
+
+<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="catalogGenerator.js"></script>
+<script type="text/javascript">
+// 获取文章中的标题元素数组
+var blogContentHeader = $("#blogContent :header").prev("span[id^='OSC_h']");
+var blogContentHeaderOffsetTop = [];
+blogContentHeader.each(function(index, element) {
+    blogContentHeaderOffsetTop[index] = $(element).offset().top;
+});
+var catalogHeader = $(".catalog-menu li[class^='osc_h']");
+console.log("blogContentHeaderOffsetTop: " + blogContentHeaderOffsetTop);
+
+var curIndex = 0;
+$(window).on("scroll", function(event) {
+    var windowScrollTop = $(window).scrollTop();
+    curIndex = getRange(windowScrollTop, blogContentHeaderOffsetTop);
+    console.log(curIndex);
+    catalogHeader.removeClass("active").eq(curIndex).addClass('active');
+
+});
+
+function getRange(value, array) {
+    var arrayIndex = 0;
+    array.forEach( function(element, index, array) {
+        if(value >= element && value < array[index + 1]) {
+            console.log(value + ": " + index);
+            arrayIndex = index;
+            return;
+        }
+    });
+    return arrayIndex;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //鼠标滚轮事件处理函数
+    function fnMouseWheel(e) {
+        var event = e || window.event;
+        var wheelDelta = 0;
+        var type = event.type;
+        if (type == 'DOMMouseScroll' || type == 'mousewheel') {
+            wheelDelta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
+        }
+        if(wheelDelta > 0) {
+            alert("WheelUp-wheelDelta: " + wheelDelta);
+        }else {
+            alert("WheelDown-wheelDelta: " + wheelDelta);
+        }
+        return false;
+    }
+    
+    // Firefox
+    window.onmousewheel = fnMouseWheel;
+    if(window.addEventListener) {
+        window.addEventListener("DOMMouseScroll", fnMouseWheel, false);
+    }
+</script>
+</body>
+</html>
